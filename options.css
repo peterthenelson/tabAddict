@@ -1,0 +1,23 @@
+body {
+  background-color: #F0F0FF;
+}
+
+#content {
+  padding-left: 18%;
+  padding-right: 18%;
+  max-width: 40em;
+}
+
+h2 {
+  font-size: 20px;
+  font-family: 'Racing Sans One', cursive;
+  text-shadow: -1px 1px #B9B9E3;
+}
+
+p {
+  font-family: 'Arial';
+}
+
+blockquote,code {
+  background-color: #ddd;
+}

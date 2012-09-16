@@ -1,0 +1,64 @@
+<html lang="en">
+<head>
+  <title>About TabAddict</title>
+  <link rel="stylesheet" type="text/css" href="options.css" />
+  <link href='http://fonts.googleapis.com/css?family=Racing+Sans+One' rel='stylesheet' type='text/css'>
+</head>
+<body>
+<div id="content">
+<h2>How to Use TabAddict</h2>
+
+<p>After installation, the TabAddict button will show up to the
+right of the omnibox. Click it to open TabAddict.</p>
+
+<p>The TabAddict page has three buttons: <em>Open</em>, 
+<em>Capture</em>, and <em>Launch</em>. Below the buttons is
+the Session Editor.</p>
+
+<p>The <em>Open</em> button loads a file into the Session Editor
+using drag-and-drop. The <em>Capture</em> button puts a snapshot
+of the current session into the Session Editor. The <em>Launch</em>
+button launches the session you are editing.</p>
+
+<p>Interactions with the local file system are very limited in
+Chrome Extensions. If you want to save a captured session, you're
+going to have to copy-and-paste it into Notepad or something. Sorry.</p>
+
+<h2>The Format for Sessions</h2>
+
+<p>Each line that starts with <code>http://</code> or <code>https://</code>
+will be interpreted as a link and cause a new tab to open.</p>
+
+<p>Each <code>></code> will cause an additional window to be opened.</p>
+
+<p>All other lines will be ignored. For example:</p>
+
+<blockquote>
+<pre>
+# Google!
+http://www.google.com
+> My favorites
+http://foo.com
+# This one's really awesome
+http://bar.net
+> My less favorite sites
+http://foobar.org
+</pre>
+</blockquote>
+
+<p>In the above example, <code>google.com</code> will be opened in the
+current window, <code>foo.com</code> and <code>bar.net</code> will open in
+a second window, and <code>foobar.org</code> will open in a third window.</p>
+
+<h2>Credits</h2>
+
+<p>TabAddict was created by <a href="http://peterthenelson.com">Peter Nelson</a>.</p>
+
+<p>It is provided under the <a href="http://www.gnu.org/licenses/gpl.html">GPL</a>.</p>
+
+<p>Icons were provided by <a href="http://icomoon.io/">IcoMoon</a>
+and <a href="http://www.umutpulat.com/">Umut Pulat</a>.</p>
+</div>
+</body>
+</html>
+
