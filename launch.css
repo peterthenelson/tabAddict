@@ -1,83 +1,96 @@
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
 body {
   text-align: center;
-  padding: 0px;
-  margin: 0px;
-} 
-
-#title {
-  position: absolute;
-  left: 10px;
-  top: 10px;
-  font-size: 20px;
-  font-family: 'Racing Sans One', cursive;
-  text-shadow: -1px 1px #B9B9E3;
+  background: #F5F5FF;
+  display: flex;
+  flex-direction: column;
 }
 
 #button-bar {
   width: 100%;
-  height: 90px;
-  margin: 0px; 
-  background-image: -webkit-linear-gradient(
-    bottom, 
-    rgb(86,96,192) 14%,
-    rgb(185,185,227) 86%);
+  height: 76px;
+  background: #1E1B4B;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+  box-sizing: border-box;
 }
 
-.wrapper-outer {
-  position:relative;
-  float:left;
-  left:50%;
+#title {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 20px;
+  font-family: 'Racing Sans One', cursive;
+  color: #C7D2FE;
+  letter-spacing: 0.5px;
+  pointer-events: none;
 }
 
+.wrapper-outer,
 .wrapper-inner {
-  position:relative;
-  float:left;
-  left:-50%;
+  display: contents;
 }
 
 #buttons {
   list-style: none;
-  margin: 0px;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 10px;
 }
 
 li {
-  width: 67px;
-  height: 40px;
-  float: left;
-  -webkit-border-radius: 15px;
-  padding: 5px;
-  background-origin: border-box;
-  background-position: center; 
-  background-repeat: no-repeat;
-  
-  box-shadow: 1px 1px 5px 0 #000000;
-  margin-top: 20px;
-  margin-left: 0px;
-  margin-right: 10px;
-  
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  padding: 0;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
 }
 
 li:hover {
-  box-shadow: 1px 1px 3px 0 #000000;
-  margin-top: 21px;
-  margin-left: 1px;
-  margin-right: 9px;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.6);
 }
 
-#open {
-  background-image: url('icomoon_open.png');
+li:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
 }
 
-#capture {
-  background-image: url('icomoon_capture.png');
-}
-
-#launch {
-  background-image: url('icomoon_launch.png');
+li img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border-radius: 12px;
 }
 
 #text {
+  display: block;
   width: 100%;
-  height: 90%;
-  background-color: #F0F0FF;
+  flex: 1;
+  box-sizing: border-box;
+  background: #EEF2FF;
+  border: none;
+  border-top: 1px solid #D4D4F7;
+  outline: none;
+  padding: 12px 14px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 15px;
+  color: #1E1B4B;
+  resize: none;
+}
+
+#text:focus {
+  border-top-color: #6366F1;
 }

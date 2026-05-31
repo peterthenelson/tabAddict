@@ -1,115 +1,102 @@
-$(function () {
-  // Used to launch tabs
-  open_tabs = function (result) {
-    var i, windows;
-    windows = process_links(result);
-    if (windows.length >= 1) {
-      for (i = 0; i < windows[0].length; i++) {
-        chrome.tabs.create({'url': windows[0][i]});
-      }
-    }
-    for (i = 1; i < windows.length; i++) {
-      if (windows[i].length > 0) {
-        chrome.windows.create({'url': windows[i]});
-      }
-    }
-    chrome.tabs.getCurrent(function (tab) {
-      chrome.tabs.remove(tab.id);
-    });
-  };
-  
-  // Processing links
-  process_links = function (result) {
-    var raw_links, i, link, windows;
-    raw_links = result.split('\n');
-    windows = [[]];
-    // TODO split windows on >
-    for (i = 0; i < raw_links.length; i++) {
-      link = raw_links[i];
-      if (link[0] === '>') {
+document.addEventListener('DOMContentLoaded', () => {
+  const text = document.getElementById('text');
+  let position = null;
+
+  function processLinks(result) {
+    const windows = [[]];
+    for (const line of result.split('\n')) {
+      if (line[0] === '>') {
         windows.push([]);
-      } else if (link.substr(0,7) === 'http://' 
-        || link.substr(0,8) === 'https://') { // TODO filter better
-        windows[windows.length-1].push(raw_links[i])
+      } else if (line.startsWith('http://') || line.startsWith('https://')) {
+        windows[windows.length - 1].push(line.trim());
       }
     }
     return windows;
   }
-  
-  // Used to fill the save tab with the current session
-  fill_from_windows = function () {
-    $('#text')[0].value = '';
-    chrome.tabs.getCurrent(
-      function (current_tab) {
-        chrome.windows.getAll(
-          {'populate': true},
-          function (windows) {
-            var i, txt, tabs;
-            txt = $('#text')[0];
-            for (i = 0; i < windows.length; i++) {
-              if (windows[i].type === 'normal' || windows[i].type === 'popup') {
-                tabs = windows[i].tabs;
-                txt.value += "> Window #" + (i+1) + "\n";
-                for (j = 0; j < tabs.length; j++) {
-                  if (tabs[j].id !== current_tab.id) {
-                    txt.value += tabs[j].url + "\n";
-                  }
-                }
-                txt.value += "\n";
+
+  function openTabs(result) {
+    const windows = processLinks(result);
+    for (const url of windows[0]) {
+      chrome.tabs.create({ url });
+    }
+    for (let i = 1; i < windows.length; i++) {
+      if (windows[i].length > 0) {
+        chrome.windows.create({ url: windows[i] });
+      }
+    }
+    chrome.tabs.getCurrent(tab => chrome.tabs.remove(tab.id));
+  }
+
+  function fillFromWindows() {
+    text.value = '';
+    chrome.tabs.getCurrent(currentTab => {
+      chrome.windows.getAll({ populate: true }, windows => {
+        let n = 0;
+        for (const win of windows) {
+          if (win.type === 'normal' || win.type === 'popup') {
+            n++;
+            text.value += `> Window #${n}\n`;
+            for (const tab of win.tabs) {
+              if (tab.id !== currentTab.id) {
+                text.value += tab.url + '\n';
               }
             }
+            text.value += '\n';
           }
-        );
+        }
+      });
+    });
+  }
+
+  function minimizeAll(callback) {
+    chrome.windows.getAll(wins => {
+      let count = wins.length;
+      for (const win of wins) {
+        chrome.windows.update(win.id, { state: 'minimized' }, () => {
+          if (--count === 0) callback();
+        });
       }
-    );
-  };
-  
-  // Set up the buttons
-  $('#open').click(function (e) {
+    });
+  }
+
+  function launchDndWin() {
+    chrome.windows.create({
+      url: chrome.runtime.getURL('dnd.html'),
+      left: 600,
+      top: 150,
+      width: 430,
+      height: 545,
+    });
+  }
+
+  document.getElementById('open').addEventListener('click', e => {
     e.preventDefault();
-    chrome.windows.getCurrent(
-      function (window) {
-        var bkg;
-        position = {
-          'left': window.left,
-          'top': window.top,
-          'height': window.height,
-          'width': window.width
-        };
-        bkg = chrome.extension.getBackgroundPage();
-        bkg.minimizeAll(bkg.launchDndNewWin);
-      }
-    );
+    chrome.windows.getCurrent(win => {
+      position = { left: win.left, top: win.top, height: win.height, width: win.width };
+      minimizeAll(launchDndWin);
+    });
   });
-  $('#capture').click(function (e) {
+
+  document.getElementById('capture').addEventListener('click', e => {
     e.preventDefault();
-    fill_from_windows();
+    fillFromWindows();
   });
-  $('#launch').click(function (e) {
+
+  document.getElementById('launch').addEventListener('click', e => {
     e.preventDefault();
-    open_tabs($('#text')[0].value);
+    openTabs(text.value);
   });
-  
-  // Setup the listening for the dnd popup
-  chrome.extension.onMessage.addListener(
-    function(request, sender, sendResponse) {
-      if (request.content || request.content === '') {
-        $('#text')[0].value = request.content;
-      }
+
+  chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if (request.content || request.content === '') {
+      text.value = request.content;
+    }
+    if (position) {
       chrome.windows.update(
         chrome.windows.WINDOW_ID_CURRENT,
-        {
-          'left': position['left'],
-          'top': position['top'],
-          'height': position['height'],
-          'width': position['width'],
-          'state': 'normal',
-          'focused': true
-        },
-        function () {
-          $('#text').focus()
-        }
+        { ...position, state: 'normal', focused: true },
+        () => text.focus()
       );
     }
-  );
+  });
 });

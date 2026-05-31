@@ -1,19 +1,30 @@
 {
   "name": "TabAddict",
-  "version": "1.1",
-  "manifest_version": 2,
-  "description": "A light-weight session saver.",
-  "browser_action": {
-    "default_icon": "icon.png",
-    "dnd": "dnd.html",
-    "launch": "launch.html"
+  "version": "2.0",
+  "manifest_version": 3,
+  "description": "Save, edit, and restore browser sessions as plain text. All data stays on your device.",
+  "icons": {
+    "16": "icon-16.png",
+    "32": "icon-32.png",
+    "64": "icon-64.png",
+    "128": "icon-128.png",
+    "256": "icon-256.png"
+  },
+  "action": {
+    "default_icon": {
+      "16": "icon-16.png",
+      "32": "icon-32.png",
+      "64": "icon-64.png",
+      "128": "icon-128.png"
+    }
   },
   "background": {
-    "page": "background.html"
+    "service_worker": "background.js"
   },
   "permissions": [
-    "tabs"
+    "tabs",
+    "storage"
   ],
   "options_page": "options.html",
-  "homepage_url": "http://peterthenelson.com/tabaddict/"
+  "homepage_url": "https://github.com/peterthenelson/tabAddict"
 }
